@@ -1,0 +1,11 @@
+{
+  "timestamp": "20251229_184843",
+  "target_model": "mistral:7b",
+  "evaluator_model": "gpt-oss:20b",
+  "total_iterations": 4,
+  "best_score": 0.84,
+  "initial_thinking_rate": 0.26666666666666666,
+  "final_thinking_rate": 1.0,
+  "initial_tool_accuracy": 0.6666666666666666,
+  "final_tool_accuracy": 0.6
+}

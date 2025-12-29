@@ -1,0 +1,141 @@
+{
+  "timestamp": "2025-12-29 18:07:12",
+  "models_tested": [
+    "llama3.1:8b",
+    "qwen3:8b",
+    "mistral:7b",
+    "gpt-oss:20b"
+  ],
+  "metrics": [
+    {
+      "model": "llama3.1:8b",
+      "thinking_rate": 0.7,
+      "tool_call_rate": 0.7333333333333333,
+      "format_compliance_rate": 0.9166666666666666,
+      "output_diversity": 0.08333333333333333,
+      "prompt_sensitivity": 0.8803152277379627,
+      "best_prompt_variant": "explicit_think",
+      "best_thinking_rate": 1.0,
+      "fd_viable": true,
+      "details": {
+        "variant_thinking_rates": {
+          "baseline": 0.0,
+          "explicit_think": 1.0,
+          "chain_of_thought": 0.0,
+          "expert_role": 1.0,
+          "teacher_role": 1.0,
+          "json_thinking": 0.0,
+          "no_direct_action": 1.0,
+          "thinking_required": 1.0,
+          "step_by_step": 1.0,
+          "reasoning_prefix": 1.0
+        },
+        "diversity_by_temp": {
+          "0.3": 0.1111111111111111,
+          "0.5": 0.0,
+          "0.7": 0.1111111111111111,
+          "1.0": 0.1111111111111111
+        }
+      }
+    },
+    {
+      "model": "qwen3:8b",
+      "thinking_rate": 0.022222222222222223,
+      "tool_call_rate": 1.0,
+      "format_compliance_rate": 1.0,
+      "output_diversity": 0.027777777777777776,
+      "prompt_sensitivity": 0.41064557946590613,
+      "best_prompt_variant": "thinking_required",
+      "best_thinking_rate": 0.2222222222222222,
+      "fd_viable": true,
+      "details": {
+        "variant_thinking_rates": {
+          "baseline": 0.0,
+          "explicit_think": 0.0,
+          "chain_of_thought": 0.0,
+          "expert_role": 0.0,
+          "teacher_role": 0.0,
+          "json_thinking": 0.0,
+          "no_direct_action": 0.0,
+          "thinking_required": 0.2222222222222222,
+          "step_by_step": 0.0,
+          "reasoning_prefix": 0.0
+        },
+        "diversity_by_temp": {
+          "0.3": 0.0,
+          "0.5": 0.0,
+          "0.7": 0.0,
+          "1.0": 0.1111111111111111
+        }
+      }
+    },
+    {
+      "model": "mistral:7b",
+      "thinking_rate": 0.6888888888888889,
+      "tool_call_rate": 0.6111111111111112,
+      "format_compliance_rate": 1.0,
+      "output_diversity": 0.5277777777777778,
+      "prompt_sensitivity": 0.9395455273372516,
+      "best_prompt_variant": "expert_role",
+      "best_thinking_rate": 1.0,
+      "fd_viable": true,
+      "details": {
+        "variant_thinking_rates": {
+          "baseline": 0.0,
+          "explicit_think": 0.8888888888888888,
+          "chain_of_thought": 0.0,
+          "expert_role": 1.0,
+          "teacher_role": 1.0,
+          "json_thinking": 0.0,
+          "no_direct_action": 1.0,
+          "thinking_required": 1.0,
+          "step_by_step": 1.0,
+          "reasoning_prefix": 1.0
+        },
+        "diversity_by_temp": {
+          "0.3": 0.5555555555555556,
+          "0.5": 0.6666666666666666,
+          "0.7": 0.4444444444444444,
+          "1.0": 0.4444444444444444
+        }
+      }
+    },
+    {
+      "model": "gpt-oss:20b",
+      "thinking_rate": 0.044444444444444446,
+      "tool_call_rate": 0.8111111111111111,
+      "format_compliance_rate": 1.0,
+      "output_diversity": 0.1388888888888889,
+      "prompt_sensitivity": 0.6900779679509459,
+      "best_prompt_variant": "expert_role",
+      "best_thinking_rate": 0.2222222222222222,
+      "fd_viable": true,
+      "details": {
+        "variant_thinking_rates": {
+          "baseline": 0.0,
+          "explicit_think": 0.0,
+          "chain_of_thought": 0.0,
+          "expert_role": 0.2222222222222222,
+          "teacher_role": 0.2222222222222222,
+          "json_thinking": 0.0,
+          "no_direct_action": 0.0,
+          "thinking_required": 0.0,
+          "step_by_step": 0.0,
+          "reasoning_prefix": 0.0
+        },
+        "diversity_by_temp": {
+          "0.3": 0.0,
+          "0.5": 0.1111111111111111,
+          "0.7": 0.1111111111111111,
+          "1.0": 0.3333333333333333
+        }
+      }
+    }
+  ],
+  "fd_viable_models": [
+    "llama3.1:8b",
+    "qwen3:8b",
+    "mistral:7b",
+    "gpt-oss:20b"
+  ]
+}

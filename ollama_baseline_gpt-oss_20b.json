@@ -1,0 +1,2064 @@
+[
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "\\(15 \\times 23 + 47 = 345 + 47 = 392\\).",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "baseline",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "explicit_think",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "\\(15 \\times 23 + 47 = 345 + 47 = \\boxed{392}\\)",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "chain_of_thought",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "\\(15 \\times 23 + 47 = 345 + 47 = 392\\)",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'Celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15*23+47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "<think>We can perform this arithmetic directly: 15 × 23 = 345, then add 47 to get 392. No external tool is needed.</think>\nThe result is **392**.",
+    "has_thinking": true,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "expert_role",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "<think>The user requests a straightforward arithmetic calculation: \\(15 \\times 23 + 47\\). This can be done directly without external data or computation tools. 15 × 23 = 345, and 345 + 47 = 392. No tool is necessary.</think>\nThe result is **392**.",
+    "has_thinking": true,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "<think>First multiply 15 by 23.  \n15 × 23 = 345.  \nThen add 47 to that result.  \n345 + 47 = 392.  \nSo the answer is 392.</think>",
+    "has_thinking": true,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "teacher_role",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "<think>\nThe expression is \\(15 \\times 23 + 47\\).  \nFirst multiply 15 by 23:  \n\\(15 \\times 23 = 345\\).  \nThen add 47:  \n\\(345 + 47 = 392\\).  \nSo the result is 392.\n</think>\n\n**Answer:** 392",
+    "has_thinking": true,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "{\"result\": 392}",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "json_thinking",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "{\"result\":\"392\"}",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'metric'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "no_direct_action",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "thinking_required",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "step_by_step",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'c'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "prompt_variant",
+    "condition": "reasoning_prefix",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest AI news 2025'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "0-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "1-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "392",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "2-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "The result is **392**.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "Search for the latest news about AI",
+    "output": "[TOOL_CALL: search_web({'query': 'latest news about AI'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "few_shot",
+    "condition": "3-shot",
+    "query": "Calculate 15 * 23 + 47",
+    "output": "[TOOL_CALL: calculate({'expression': '15 * 23 + 47'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {}
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "使用中文回答",
+    "query": "What's the weather like in Tokyo?",
+    "output": "抱歉，我无法实时获取天气数据。建议你查看可靠的天气预报服务，例如：\n\n- **手机天气应用**（如苹果天气、华为天气、腾讯天气等）\n- **天气网站**：如天气网、AccuWeather、Weather.com、OpenWeatherMap 等\n- **搜索引擎**：在搜索框输入“东京天气”，即可快速看到最新预报\n\n如果你告诉我具体的日期或时间段，我可以给你介绍那段时间东京的一般气候特征（如温度、降雨概率等）。",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response contains Chinese characters"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "使用中文回答",
+    "query": "What's the weather like in Tokyo?",
+    "output": "对不起，我无法实时获取天气信息。  \n如果你想了解今天或未来几天东京的天气，建议你：\n\n1. **使用天气网站或App**  \n   - **Weather.com / AccuWeather**  \n   - **中国天气网**（提供全球城市天气）  \n   - **墨迹天气**、**墨迹天气**（国内常用的天气应用）  \n\n2. **搜索「东京天气」**  \n   通过百度、Google 或其他搜索引擎直接输入 “东京天气”，即可看到最新温度、湿度、降雨概率等信息。\n\n---\n\n### 东京典型气候概览（供参考）\n\n| 季节 | 主要特征 | 温度范围（℃） |\n|------|----------|---------------|\n| 春季（3‑5月） | 花季，气温回升，偶有雨 | 10–18 |\n| 夏季（6‑8月） | 高温高湿，台风季节 | 25–35 |\n| 秋季（9‑11月） | 气候凉爽，湿度下降 | 15–22 |\n| 冬季（12‑2月） | 温和寒冷，偶有雨雪 | 5–12 |\n\n- **夏季**：东京的夏季往往炎热且潮湿，湿度可达70%以上，时常有雷阵雨或台风影响。  \n- **冬季**：相对温和，平均气温在5°C左右，偶尔会出现小雪，但大雪较少。  \n- **春秋**：是最适合旅游的季节，气温舒适，降雨相对较少。\n\n---\n\n如果你需要具体的气象预报（例如今天的最高温度、降雨概率、风速等），建议你在上述天气平台上查询，或者使用手机助手（如Siri、Google Assistant）直接询问“东京今天的天气”。祝你旅行愉快！",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response contains Chinese characters"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "使用中文回答",
+    "query": "What's the weather like in Tokyo?",
+    "output": "对不起，我无法实时获取当前天气信息。你可以通过以下几种方式快速查看东京的最新天气：\n\n1. **天气网站**  \n   - [天气网](https://www.tianqi.com/tokyo)  \n   - [AccuWeather](https://www.accuweather.com/zh/zh/tokyo/1850147/weather-forecast/1850147)  \n   - [Weather.com](https://weather.com/zh-CN/weather/today/l/35.68%2C139.69)  \n\n2. **手机应用**  \n   - “墨迹天气”“墨迹天气”“天气通”“华为天气”等国内主流天气 APP 都能提供东京实时预报。  \n\n3. **搜索引擎**  \n   在百度、谷歌或必应中输入「东京天气」即可得到即时气温、降水概率、风速等信息。  \n\n如果你想了解东京的季节性气候特征，通常是：\n\n- **春季（3‑5月）**：温暖，降雨量逐渐增多，平均气温 10‑18 °C。  \n- **夏季（6‑8月）**：高温多雨，台风季节，平均气温 25‑32 °C。  \n- **秋季（9‑11月）**：气候宜人，平均气温 15‑22 °C。  \n- **冬季（12‑2月）**：寒冷干燥，平均气温 1‑8 °C，偶尔降雪。  \n\n如果你需要更详细的预测（如未来三天的温度、湿度、能见度等），建议使用上述实时天气服务。祝你旅途愉快！",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response contains Chinese characters"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "回答以 'OK:' 開頭",
+    "query": "What's the weather like in Tokyo?",
+    "output": "OK: I’m sorry, but I don’t have access to real‑time weather data. For the most accurate and up‑to‑date forecast in Tokyo, you can check a reliable weather website (e.g., Weather.com, AccuWeather) or use a weather app on your phone.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response starts with 'OK:'"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "回答以 'OK:' 開頭",
+    "query": "What's the weather like in Tokyo?",
+    "output": "OK: I’m sorry, but I don’t have real‑time data access, so I can’t tell you the current weather in Tokyo. For the most accurate and up‑to‑date forecast, you can check a trusted weather website (e.g., the Japan Meteorological Agency, Weather.com, or a local news outlet) or use a weather app on your phone. If you need a general idea of Tokyo’s climate (e.g., seasonal averages), I can provide that information.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response starts with 'OK:'"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "回答以 'OK:' 開頭",
+    "query": "What's the weather like in Tokyo?",
+    "output": "OK: I’m sorry, but I don’t have real‑time access to current weather data. For the most accurate and up‑to‑date forecast in Tokyo, I recommend checking a reliable weather service such as the Japan Meteorological Agency, Weather.com, or a weather app on your phone. They’ll give you the latest temperature, humidity, precipitation chances, and any alerts.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response starts with 'OK:'"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "在回答末尾加上 [DONE]",
+    "query": "What's the weather like in Tokyo?",
+    "output": "I don’t have real‑time data, so I can’t give you the current temperature or forecast for Tokyo right now.  \nTypically, Tokyo’s weather varies by season:\n\n- **Spring (March–May)** – Mild temperatures (10–20 °C), often sunny with a chance of rain.\n- **Summer (June–August)** – Warm to hot (25–35 °C), high humidity, and a rainy monsoon season in June–July.\n- **Autumn (September–November)** – Comfortable temperatures (15–25 °C), lower humidity, and clearer skies.\n- **Winter (December–February)** – Cool (5–10 °C), rarely below freezing, with occasional light snow.\n\nFor the most accurate and up‑to‑date forecast, check a reliable weather service such as the Japan Meteorological Agency, Weather.com, or a weather app on your phone.\n\nFeel free to let me know if you’d like historical weather data or travel tips for Tokyo!  \n\n[DONE]",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response contains [DONE]"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "在回答末尾加上 [DONE]",
+    "query": "What's the weather like in Tokyo?",
+    "output": "I’m sorry, but I don’t have real‑time data access, so I can’t give you the current weather in Tokyo.  \nFor the most accurate and up‑to‑date forecast, check a reliable weather website or app such as the Japan Meteorological Agency, Weather.com, or a local news outlet. They’ll provide temperature, precipitation, wind, and any alerts you might need.  \n\nFeel free to let me know if you’d like a quick overview of Tokyo’s typical climate or seasonal weather patterns!  \n\n[DONE]",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response contains [DONE]"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "在回答末尾加上 [DONE]",
+    "query": "What's the weather like in Tokyo?",
+    "output": "I’m sorry, but I don’t have real‑time weather data. For the most accurate and up‑to‑date forecast in Tokyo, you can check a reliable weather website or app such as the Japan Meteorological Agency, Weather.com, or a local news outlet. They’ll give you current temperature, humidity, wind, and any forecasted precipitation or advisories.\n\nIf you’d like, I can give you a general idea of Tokyo’s typical weather patterns for the time of year you’re interested in. Just let me know the month or season!  \n\n[DONE]",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response contains [DONE]"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "用編號步驟 (1. 2. 3.) 來組織你的回答",
+    "query": "What's the weather like in Tokyo?",
+    "output": "**步驟 1️⃣：了解目前無法提供即時天氣資訊**  \n我目前無法直接連接網路查詢最新的天氣數據，因此無法告訴你「現在」東京的實際天氣狀況。若你需要即時天氣，請參考下列方式。\n\n**步驟 2️⃣：查詢即時天氣的可靠來源**  \n1. **天氣網站**：前往 [Weather.com](https://weather.com/)、[AccuWeather](https://www.accuweather.com/)、或日本氣象廳的官方網站。  \n2. **手機 App**：安裝「Yahoo 天氣」或「Google 天氣」等 App，輸入「東京」即可取得最新預報。  \n3. **搜尋引擎**：在 Google、Bing 或 Yahoo 搜尋「東京 天氣」，搜尋結果頁面會顯示即時溫度、降雨機率等資訊。  \n4. **語音助手**：使用 Siri、Google Assistant 或 Alexa，說「What's the weather in Tokyo today?」即可得到即時回覆。\n\n**步驟 3️⃣：了解東京的季節性天氣特徵**  \n- **春季（3‑5 月）**：氣溫 10–20 °C，櫻花盛開，偶有午後雷陣雨。  \n- **夏季（6‑8 月）**：氣溫 25–35 °C，潮濕，台風季節約 7‑9 月。  \n- **秋季（9‑11 月）**：氣溫 15–25 °C，乾燥，風景宜人。  \n- **冬季（12‑2 月）**：氣溫 0–10 °C，偶有霧凍，較少降雪。  \n\n若你想知道「明天」或「未來一週」的天氣預報，建議直接使用步驟 2️⃣ 中的天氣網站或 App，即可得到最精準的資訊。祝你規劃順利！",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response uses numbered steps"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "用編號步驟 (1. 2. 3.) 來組織你的回答",
+    "query": "What's the weather like in Tokyo?",
+    "output": "**How to find out the current weather in Tokyo (and a quick climate snapshot)**  \n\n1. **Check a reliable real‑time weather source**  \n   - Open a trusted weather website or app (e.g., Weather.com, AccuWeather, or the Japan Meteorological Agency).  \n   - Enter “Tokyo” in the search bar and view the current temperature, humidity, wind speed, and forecast for the next few days.  \n\n2. **Use a weather API if you need programmatic access**  \n   - Sign up for a free tier of an API such as OpenWeatherMap or WeatherAPI.  \n   - Call the endpoint for Tokyo’s coordinates (35.6895° N, 139.6917° E) to retrieve JSON data with the current weather conditions.  \n\n3. **Know the typical climate for the time of year**  \n   - **Spring (Mar–May):** Mild, 12–20 °C, occasional rain.  \n   - **Summer (Jun–Aug):** Hot and humid, 25–35 °C, high humidity, typhoon risk in late summer.  \n   - **Autumn (Sep–Nov):** Comfortable, 15–22 °C, lower humidity, clear skies.  \n   - **Winter (Dec–Feb):** Cool, 5–10 °C, rare snowfall in the city, occasional cold snaps.  \n\n> **Tip:** If you’re planning a trip, also check the “UV index” and “air quality” data, especially during summer months.  \n\nFeel free to let me know if you’d like a quick example of how to format an API call or if you need a forecast for a specific date!",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response uses numbered steps"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "format_compliance",
+    "condition": "用編號步驟 (1. 2. 3.) 來組織你的回答",
+    "query": "What's the weather like in Tokyo?",
+    "output": "1. **Current‑day limitation** – I don’t have access to live weather feeds, so I can’t give you the exact temperature or forecast for Tokyo right now.  \n2. **Typical climate snapshot** – In late March/early April Tokyo usually sees mild temperatures (10–18 °C) with a mix of sunny and partly cloudy skies; humidity is moderate and rainfall is relatively low.  \n3. **How to get the up‑to‑date info** – Check a reliable weather service such as the Japan Meteorological Agency, Weather.com, or a weather app on your phone for the latest temperature, precipitation, and forecast details.",
+    "has_thinking": false,
+    "has_tool_call": false,
+    "format_compliant": true,
+    "metadata": {
+      "format_type": "Response uses numbered steps"
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.3",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.3
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.5",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.5
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=0.7",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 0.7
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'Celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'C'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'metric'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  },
+  {
+    "model": "gpt-oss:20b",
+    "test_type": "output_variance",
+    "condition": "temp=1.0",
+    "query": "What's the weather like in Tokyo?",
+    "output": "[TOOL_CALL: get_weather({'city': 'Tokyo', 'unit': 'Celsius'})]",
+    "has_thinking": false,
+    "has_tool_call": true,
+    "format_compliant": false,
+    "metadata": {
+      "temperature": 1.0
+    }
+  }
+]

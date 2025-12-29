@@ -1,0 +1,24 @@
+# Model files
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Output directories
+outputs/
+functiongemma-lora/
+functiongemma-gguf/
+
+# Cache directories
+llama.cpp/
+unsloth_compiled_cache/
+__pycache__/
+.ipynb_checkpoints/
+
+# Log files
+*.log
+
+# Environment
+.env
+.venv/

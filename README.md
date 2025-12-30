@@ -137,17 +137,63 @@ os.environ["TORCHDYNAMO_DISABLE"] = "1"
 - 降低 `BATCH_SIZE`（例如 2 → 1）
 - 增加 `GRADIENT_ACCUMULATION_STEPS` 以維持有效 batch size
 
+## Feedback Descent 優化器
+
+使用 Feedback Descent (FD) 算法優化 prompt，讓本地 LLM 在 tool-calling 前產生 `<think>` 推理標籤。
+
+論文：[Feedback Descent (arXiv:2511.07919)](https://arxiv.org/abs/2511.07919)
+
+### 環境要求
+
+- Ollama 服務運行中
+- 目標模型：`ollama pull mistral:7b`
+- 評估模型：`ollama pull gpt-oss:20b`
+
+### 執行
+
+```bash
+python ollama_fd_optimizer.py
+```
+
+### 配置參數
+
+| 參數 | 預設值 | 說明 |
+|------|--------|------|
+| N_EVALUATION_SAMPLES | 5 | 評估樣本數 |
+| MAX_ITERATIONS | 15 | 最大迭代輪數 |
+| SAMPLES_PER_PROMPT | 3 | 每 prompt 採樣次數 |
+| MIN_TOOL_ACCURACY | 0.4 | 最低 tool accuracy 門檻 |
+
+### 輸出文件
+
+| 路徑 | 說明 |
+|------|------|
+| `ollama_fd_results/best_prompt_*.json` | 優化後的最佳 prompt |
+| `ollama_fd_results/optimization_log_*.json` | 完整優化歷史 |
+| `ollama_fd_results/summary_*.json` | 實驗摘要 |
+
+### 實驗結果
+
+| 指標 | 初始值 | 最終值 | 變化 |
+|------|--------|--------|------|
+| Thinking Rate | 100% | 100% | 維持 |
+| Tool Accuracy | 20% | 80% | +60pp (4x) |
+
 ## 檔案結構
 
 ```
 functiongemma/
 ├── train.py                 # 主訓練腳本
 ├── convert_to_gguf.py       # GGUF 轉換腳本
+├── ollama_fd_optimizer.py   # Feedback Descent 優化器
+├── ollama_baseline_test.py  # Ollama 模型基線測試
+├── data_utils.py            # 共用資料處理模組
 ├── README.md                # 本文件
 ├── training.log             # 訓練日誌
 ├── functiongemma-lora/      # 訓練輸出（LoRA 適配器）
 ├── functiongemma-gguf/      # 合併後模型
-└── functiongemma-270m-it.Q8_0.gguf  # GGUF 量化模型
+├── functiongemma-270m-it.Q8_0.gguf  # GGUF 量化模型
+└── ollama_fd_results/       # FD 優化結果
 ```
 
 ## 參考資料

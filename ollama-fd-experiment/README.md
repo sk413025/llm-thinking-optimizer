@@ -9,8 +9,8 @@
 **方法**: Feedback Descent - 使用較大的評估器模型對輸出進行 pairwise comparison，迭代改進 prompt。
 
 **結果**:
-- Thinking Rate: 26.7% → **100%**
-- Tool Accuracy: 66.7% → **60%** (維持合理水平)
+- Thinking Rate: 100% → **100%** (維持)
+- Tool Accuracy: 20% → **80%** (+60pp, 4x 提升)
 
 ---
 
@@ -76,7 +76,7 @@ python ollama_fd_optimizer.py
 |------|------|
 | `ollama_fd_optimizer.py` | FD 優化器主程式 |
 | `ollama_baseline_test.py` | 基線測試腳本 |
-| `FD_DEBUGGING_NOTES.md` | 調試記錄與已知問題 |
+| `data_utils.py` | 共用資料處理模組 |
 | `reference_results/` | 參考結果 (用於驗證) |
 
 ---
@@ -107,17 +107,25 @@ MIN_TOOL_ACCURACY = 0.4  # 最低 tool accuracy 門檻
 
 ```
 [Iteration 0] Initial evaluation...
-  Thinking Rate: 26.7%
-  Tool Accuracy: 66.7%
-  Score: 0.427
-
-[Iteration 1] Generating improved prompt...
   Thinking Rate: 100.0%
-  Tool Accuracy: 60.0%
-  Score: 0.840
+  Tool Accuracy: 20.0%
+  Score: 0.680
+
+[Iteration 7] Generating improved prompt...
+  Thinking Rate: 100.0%
+  Tool Accuracy: 53.3%
+  Score: 0.813
   ✓ Accepting new prompt (improvement)
 
-[Early Stop] Target thinking rate achieved!
+...
+
+[Iteration 14]
+  Thinking Rate: 100.0%
+  Tool Accuracy: 80.0%
+  Score: 0.920
+
+Optimization Complete!
+Best Score: 0.920
 ```
 
 ### 輸出檔案
@@ -137,7 +145,8 @@ cat ollama_fd_results/summary_*.json
 
 # 預期數值:
 # - final_thinking_rate: 1.0 (100%)
-# - final_tool_accuracy: ~0.6 (60%)
+# - final_tool_accuracy: ~0.8 (80%)
+# - best_score: ~0.92
 ```
 
 ---
@@ -148,7 +157,7 @@ cat ollama_fd_results/summary_*.json
 
 **原因**: 解析器可能無法識別某些格式的 tool call。
 
-**解決**: 參見 `FD_DEBUGGING_NOTES.md` 中的多格式解析器說明。
+**解決**: 檢查 `ollama_fd_optimizer.py` 中的 `_parse_output` 方法，支援多種 tool call 格式。
 
 ### Ollama 連接失敗
 
@@ -203,12 +212,12 @@ EVALUATOR_MODEL = "your-evaluator:tag"
 
 ## 參考結果
 
-`reference_results/` 目錄包含原始實驗結果，可用於比對驗證：
+`reference_results/` 目錄包含實驗結果，可用於比對驗證：
 
 | 檔案 | 說明 |
 |------|------|
-| `ollama_baseline_summary.json` | 4 個模型的基線測試結果 |
 | `ollama_fd_results/best_prompt_*.json` | 優化後的最佳 prompt |
+| `ollama_fd_results/optimization_log_*.json` | 完整優化歷史 |
 | `ollama_fd_results/summary_*.json` | 優化結果摘要 |
 
 ---
@@ -230,8 +239,9 @@ EVALUATOR_MODEL = "your-evaluator:tag"
 ### 實驗結論
 
 - FD 在 7B+ 模型上可行
-- mistral:7b 達到 100% thinking rate
-- Tool accuracy 維持 60%（可接受的 trade-off）
+- mistral:7b 維持 100% thinking rate
+- Tool accuracy 從 20% 提升至 80% (4x 改進)
+- 關鍵修正：query-sample 對齊讓評估器做出更準確的 pairwise 判斷
 
 ---
 
@@ -243,7 +253,7 @@ EVALUATOR_MODEL = "your-evaluator:tag"
 Feedback Descent for LLM Thinking Capability
 - 使用 pairwise comparison 優化 prompt
 - 目標：讓模型「先思考、再行動」
-- 結果：thinking rate 26.7% → 100%
+- 結果：thinking rate 100% 維持，tool accuracy 20% → 80%
 ```
 
 ---

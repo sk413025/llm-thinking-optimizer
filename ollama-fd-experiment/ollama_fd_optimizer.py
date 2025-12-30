@@ -27,12 +27,19 @@ TARGET_MODEL = "mistral:7b"        # 被優化的模型
 EVALUATOR_MODEL = "gpt-oss:20b"    # 評估器模型
 OLLAMA_BASE_URL = "http://localhost:11434"
 
+# 數據集配置 (與 train.py 對齊)
+DATASET_NAME = "LLM360/TxT360-3efforts"
+DATASET_CONFIG = "agent"
+DATASET_SPLIT = "medium"
+N_EVALUATION_SAMPLES = 5  # 先用少量樣本測試
+
 # FD 超參數
 MAX_ITERATIONS = 15      # 最大優化輪數
 EARLY_STOP_K = 5         # 連續 K 輪無改進則停止
 SAMPLES_PER_PROMPT = 3   # 每個 prompt 採樣次數
 TEMPERATURE = 0.7        # 生成溫度
 MIN_TOOL_ACCURACY = 0.4  # 最低 tool accuracy 門檻（約束條件）
+TARGET_TOOL_ACCURACY = 0.7  # 目標 tool accuracy（早停條件）
 
 # 標籤
 THINK_TAG_OPEN = "<think>"
@@ -122,6 +129,109 @@ class TestQuery:
     expected_tool_name: str
 
 
+# =============================================================================
+# 數據集加載函數 (與 train.py 對齊)
+# =============================================================================
+
+def normalize_tool_schemas(tools_raw: List[Dict]) -> List[Dict]:
+    """將 TxT360 格式轉換為 OpenAI 格式"""
+    adapted_tools = []
+    for t in tools_raw:
+        if not isinstance(t, dict):
+            continue
+        if "function" in t and isinstance(t["function"], dict):
+            adapted_tools.append(t)
+            continue
+        name = t.get("name", "")
+        description = t.get("description", "")
+        parameters = t.get("parameters") or {"type": "object", "properties": {}}
+        adapted_tools.append({
+            "type": t.get("type", "function"),
+            "function": {"name": name, "description": description, "parameters": parameters},
+        })
+    return adapted_tools
+
+
+def extract_test_query(sample: Dict) -> Optional[TestQuery]:
+    """從 TxT360 樣本提取 TestQuery"""
+    try:
+        msgs = json.loads(sample["messages"])
+    except (json.JSONDecodeError, KeyError, TypeError):
+        return None
+
+    if not msgs or not isinstance(msgs, list):
+        return None
+
+    # 提取工具
+    tools_raw = msgs[0].get("tools", []) if isinstance(msgs[0], dict) else []
+    if not tools_raw:
+        return None
+
+    adapted_tools = normalize_tool_schemas(tools_raw)
+    if not adapted_tools:
+        return None
+
+    # 找第一個 user 消息
+    user_content = None
+    for msg in msgs:
+        if msg.get("role") == "user":
+            user_content = msg.get("content", "")
+            break
+    if not user_content:
+        return None
+
+    # 找 assistant 消息中的 thinking 和 tool_call
+    expected_tool_name = None
+    has_thinking = False
+    THINK_KEYS = ["think", "think_fast", "think_faster"]
+
+    for msg in msgs:
+        if msg.get("role") != "assistant":
+            continue
+        if any(msg.get(k) for k in THINK_KEYS):
+            has_thinking = True
+        tool_calls = msg.get("tool_calls", [])
+        if tool_calls:
+            first_tc = tool_calls[0]
+            if isinstance(first_tc, dict):
+                expected_tool_name = first_tc.get("name")
+                if not expected_tool_name and "function" in first_tc:
+                    expected_tool_name = first_tc["function"].get("name")
+            break
+
+    if not has_thinking or not expected_tool_name:
+        return None
+
+    return TestQuery(user_content=user_content, tools=adapted_tools, expected_tool_name=expected_tool_name)
+
+
+def load_evaluation_samples(n_samples: int = N_EVALUATION_SAMPLES) -> List[TestQuery]:
+    """從 TxT360-3efforts 加載評估樣本"""
+    from datasets import load_dataset
+
+    print(f"  Loading from {DATASET_NAME} ({DATASET_CONFIG}/{DATASET_SPLIT})...")
+    dataset = load_dataset(DATASET_NAME, name=DATASET_CONFIG, split=DATASET_SPLIT, streaming=True)
+
+    test_queries = []
+    processed = 0
+    max_attempts = n_samples * 5
+
+    for sample in dataset:
+        if len(test_queries) >= n_samples:
+            break
+        query = extract_test_query(sample)
+        if query is not None:
+            test_queries.append(query)
+        processed += 1
+        if processed >= max_attempts:
+            print(f"  Warning: Reached max attempts ({max_attempts}), got {len(test_queries)} samples")
+            break
+        if processed % 100 == 0:
+            print(f"  Processed {processed} samples, found {len(test_queries)} valid...")
+
+    return test_queries
+
+
 @dataclass
 class EvaluationResult:
     """模型輸出評估結果"""
@@ -150,109 +260,9 @@ class OptimizationStep:
     tool_accuracy: float
     score: float
     feedback: Optional[Feedback] = None
-
-
-# =============================================================================
-# 測試查詢集
-# =============================================================================
-
-TEST_QUERIES = [
-    TestQuery(
-        user_content="What's the current weather in Tokyo?",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "get_weather",
-                "description": "Get the current weather for a location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "city": {"type": "string", "description": "The city name"},
-                        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]}
-                    },
-                    "required": ["city"]
-                }
-            }
-        }],
-        expected_tool_name="get_weather"
-    ),
-    TestQuery(
-        user_content="Search for recent news about AI regulations in Europe",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "search_news",
-                "description": "Search for news articles on a topic",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {"type": "string", "description": "Search query"},
-                        "region": {"type": "string", "description": "Geographic region"}
-                    },
-                    "required": ["query"]
-                }
-            }
-        }],
-        expected_tool_name="search_news"
-    ),
-    TestQuery(
-        user_content="Calculate 15% tip on a $85.50 restaurant bill",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "calculate",
-                "description": "Perform mathematical calculations",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "expression": {"type": "string", "description": "Math expression"}
-                    },
-                    "required": ["expression"]
-                }
-            }
-        }],
-        expected_tool_name="calculate"
-    ),
-    TestQuery(
-        user_content="Find restaurants near Times Square that are open now",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "search_places",
-                "description": "Search for places near a location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {"type": "string", "description": "What to search for"},
-                        "location": {"type": "string", "description": "Location"},
-                        "open_now": {"type": "boolean", "description": "Only open places"}
-                    },
-                    "required": ["query", "location"]
-                }
-            }
-        }],
-        expected_tool_name="search_places"
-    ),
-    TestQuery(
-        user_content="Translate 'Hello, how are you?' to Japanese",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "translate",
-                "description": "Translate text between languages",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "text": {"type": "string", "description": "Text to translate"},
-                        "target_language": {"type": "string", "description": "Target language"}
-                    },
-                    "required": ["text", "target_language"]
-                }
-            }
-        }],
-        expected_tool_name="translate"
-    ),
-]
+    # 按 query 分組的結果: results_by_query[i] = query i 的所有採樣結果
+    results_by_query: List[List["EvaluationResult"]] = field(default_factory=list)
+    queries: List["TestQuery"] = field(default_factory=list)
 
 
 # =============================================================================
@@ -433,8 +443,8 @@ class LocalLLMEvaluator:
 
     def compare(
         self,
-        outputs_a: List[EvaluationResult],
-        outputs_b: List[EvaluationResult],
+        outputs_a: List[List[EvaluationResult]],  # 按 query 分組
+        outputs_b: List[List[EvaluationResult]],  # 按 query 分組
         queries: List[TestQuery]
     ) -> Tuple[str, Feedback]:
         """比較兩組輸出並返回偏好和反饋"""
@@ -505,41 +515,58 @@ You MUST respond in this exact JSON format:
 
     def _build_comparison_prompt(
         self,
-        outputs_a: List[EvaluationResult],
-        outputs_b: List[EvaluationResult],
+        outputs_a: List[List[EvaluationResult]],  # 按 query 分組
+        outputs_b: List[List[EvaluationResult]],  # 按 query 分組
         queries: List[TestQuery]
     ) -> str:
-        """構建比較 prompt"""
+        """構建比較 prompt（正確對齊：每組結果對應一個 query）"""
         lines = ["Compare the following two sets of outputs:\n"]
 
-        for i, (query, out_a, out_b) in enumerate(zip(queries, outputs_a, outputs_b)):
-            lines.append(f"=== Query {i+1}: {query.user_content} ===")
+        # 展平以計算總體統計
+        flat_a = [r for group in outputs_a for r in group]
+        flat_b = [r for group in outputs_b for r in group]
+
+        for i, (query, group_a, group_b) in enumerate(zip(queries, outputs_a, outputs_b)):
+            lines.append(f"=== Query {i+1}: {query.user_content[:100]}... ===")
             lines.append(f"Expected tool: {query.expected_tool_name}")
 
-            lines.append(f"\n--- Output A ---")
-            lines.append(f"Has thinking: {out_a.has_thinking}")
-            if out_a.thinking_content:
-                lines.append(f"Thinking: {out_a.thinking_content[:200]}...")
-            lines.append(f"Has tool call: {out_a.has_tool_call}")
-            lines.append(f"Tool called: {out_a.tool_call_name}")
-            lines.append(f"Correct tool: {out_a.tool_call_correct}")
+            # 使用每組的第一個採樣來展示（所有採樣都是對同一個 query 的回應）
+            out_a = group_a[0] if group_a else None
+            out_b = group_b[0] if group_b else None
 
-            lines.append(f"\n--- Output B ---")
-            lines.append(f"Has thinking: {out_b.has_thinking}")
-            if out_b.thinking_content:
-                lines.append(f"Thinking: {out_b.thinking_content[:200]}...")
-            lines.append(f"Has tool call: {out_b.has_tool_call}")
-            lines.append(f"Tool called: {out_b.tool_call_name}")
-            lines.append(f"Correct tool: {out_b.tool_call_correct}")
+            if out_a:
+                lines.append(f"\n--- Output A (sample 1 of {len(group_a)}) ---")
+                lines.append(f"Has thinking: {out_a.has_thinking}")
+                if out_a.thinking_content:
+                    lines.append(f"Thinking: {out_a.thinking_content[:200]}...")
+                lines.append(f"Has tool call: {out_a.has_tool_call}")
+                lines.append(f"Tool called: {out_a.tool_call_name}")
+                lines.append(f"Correct tool: {out_a.tool_call_correct}")
+                # 該 query 的統計
+                a_query_correct = sum(1 for r in group_a if r.tool_call_correct) / len(group_a)
+                lines.append(f"Query accuracy ({len(group_a)} samples): {a_query_correct:.0%}")
+
+            if out_b:
+                lines.append(f"\n--- Output B (sample 1 of {len(group_b)}) ---")
+                lines.append(f"Has thinking: {out_b.has_thinking}")
+                if out_b.thinking_content:
+                    lines.append(f"Thinking: {out_b.thinking_content[:200]}...")
+                lines.append(f"Has tool call: {out_b.has_tool_call}")
+                lines.append(f"Tool called: {out_b.tool_call_name}")
+                lines.append(f"Correct tool: {out_b.tool_call_correct}")
+                # 該 query 的統計
+                b_query_correct = sum(1 for r in group_b if r.tool_call_correct) / len(group_b)
+                lines.append(f"Query accuracy ({len(group_b)} samples): {b_query_correct:.0%}")
+
             lines.append("")
 
-        # 添加統計摘要
-        a_thinking_rate = sum(1 for o in outputs_a if o.has_thinking) / len(outputs_a)
-        b_thinking_rate = sum(1 for o in outputs_b if o.has_thinking) / len(outputs_b)
-        a_tool_rate = sum(1 for o in outputs_a if o.tool_call_correct) / len(outputs_a)
-        b_tool_rate = sum(1 for o in outputs_b if o.tool_call_correct) / len(outputs_b)
+        # 添加總體統計摘要
+        a_thinking_rate = sum(1 for o in flat_a if o.has_thinking) / len(flat_a) if flat_a else 0
+        b_thinking_rate = sum(1 for o in flat_b if o.has_thinking) / len(flat_b) if flat_b else 0
+        a_tool_rate = sum(1 for o in flat_a if o.tool_call_correct) / len(flat_a) if flat_a else 0
+        b_tool_rate = sum(1 for o in flat_b if o.tool_call_correct) / len(flat_b) if flat_b else 0
 
-        lines.append(f"\n=== Summary ===")
+        lines.append(f"\n=== Overall Summary ===")
         lines.append(f"Set A: thinking={a_thinking_rate:.0%}, tool_accuracy={a_tool_rate:.0%}")
         lines.append(f"Set B: thinking={b_thinking_rate:.0%}, tool_accuracy={b_tool_rate:.0%}")
 
@@ -623,19 +650,29 @@ class FDOptimizer:
         self.best_score: float = 0.0
         self.no_improvement_count: int = 0
 
-    def evaluate_prompt(self, prompt: ThinkingPrompt) -> Tuple[List[EvaluationResult], float, float]:
-        """評估一個 prompt 的效果"""
-        all_results = []
+    def evaluate_prompt(self, prompt: ThinkingPrompt) -> Tuple[List[List[EvaluationResult]], float, float]:
+        """評估一個 prompt 的效果
+
+        Returns:
+            results_by_query: 按 query 分組的結果，results_by_query[i] 是 query i 的所有採樣
+            thinking_rate: 總體 thinking 率
+            tool_accuracy: 總體工具準確率
+        """
+        results_by_query = []  # List[List[EvaluationResult]] - 按 query 分組
+        all_results = []  # 用於計算總體指標
 
         for query in self.queries:
+            query_results = []
             for _ in range(SAMPLES_PER_PROMPT):
                 result = self.runner.generate(prompt, query)
+                query_results.append(result)
                 all_results.append(result)
+            results_by_query.append(query_results)
 
         thinking_rate = sum(1 for r in all_results if r.has_thinking) / len(all_results)
         tool_accuracy = sum(1 for r in all_results if r.tool_call_correct) / len(all_results)
 
-        return all_results, thinking_rate, tool_accuracy
+        return results_by_query, thinking_rate, tool_accuracy
 
     def calculate_score(self, thinking_rate: float, tool_accuracy: float) -> float:
         """計算綜合分數"""
@@ -678,7 +715,9 @@ class FDOptimizer:
             prompt=current_prompt,
             thinking_rate=thinking_rate,
             tool_accuracy=tool_accuracy,
-            score=score
+            score=score,
+            results_by_query=results,
+            queries=self.queries
         ))
 
         for iteration in range(1, max_iterations + 1):
@@ -718,7 +757,9 @@ class FDOptimizer:
                         preference="A",
                         rationale=f"Tool accuracy {new_tool_accuracy:.0%} below minimum threshold {MIN_TOOL_ACCURACY:.0%}",
                         improvement_suggestions="Need to maintain tool calling ability while adding thinking"
-                    )
+                    ),
+                    results_by_query=new_results,
+                    queries=self.queries
                 ))
                 continue
 
@@ -756,12 +797,14 @@ class FDOptimizer:
                 thinking_rate=new_thinking_rate,
                 tool_accuracy=new_tool_accuracy,
                 score=new_score,
-                feedback=feedback
+                feedback=feedback,
+                results_by_query=new_results,
+                queries=self.queries
             ))
 
-            # Early stopping
-            if thinking_rate >= 0.95:
-                print(f"\n[Early Stop] Target thinking rate achieved!")
+            # Early stopping - 需要同時達到 thinking rate 和 tool accuracy 目標
+            if thinking_rate >= 0.95 and tool_accuracy >= TARGET_TOOL_ACCURACY:
+                print(f"\n[Early Stop] Targets achieved! (thinking={thinking_rate:.0%}, tool_acc={tool_accuracy:.0%})")
                 break
 
             if self.no_improvement_count >= EARLY_STOP_K:
@@ -812,16 +855,47 @@ After thinking, make the tool call."""
         os.makedirs(output_dir, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        # 保存優化歷史
+        # 保存優化歷史（含詳細模型輸出）
         history_data = []
         for step in self.history:
+            # 構建每個查詢的詳細結果（正確對齊：results_by_query[i] = query i 的所有採樣）
+            detailed_outputs = []
+            for i, (query, query_results) in enumerate(zip(step.queries, step.results_by_query)):
+                # 取每個 query 的所有採樣結果
+                samples = []
+                for sample_idx, result in enumerate(query_results):
+                    samples.append({
+                        "sample_index": sample_idx,
+                        "model_output": result.output,
+                        "has_thinking": result.has_thinking,
+                        "thinking_content": result.thinking_content,
+                        "has_tool_call": result.has_tool_call,
+                        "tool_call_name": result.tool_call_name,
+                        "tool_call_correct": result.tool_call_correct
+                    })
+
+                # 計算該 query 的統計
+                query_thinking_rate = sum(1 for r in query_results if r.has_thinking) / len(query_results)
+                query_tool_accuracy = sum(1 for r in query_results if r.tool_call_correct) / len(query_results)
+
+                detailed_outputs.append({
+                    "query_index": i,
+                    "user_content": query.user_content[:200] + "..." if len(query.user_content) > 200 else query.user_content,
+                    "expected_tool": query.expected_tool_name,
+                    "num_samples": len(query_results),
+                    "query_thinking_rate": query_thinking_rate,
+                    "query_tool_accuracy": query_tool_accuracy,
+                    "samples": samples
+                })
+
             history_data.append({
                 "iteration": step.iteration,
                 "thinking_rate": step.thinking_rate,
                 "tool_accuracy": step.tool_accuracy,
                 "score": step.score,
-                "system_prompt": step.prompt.system_prompt[:500] + "...",
-                "feedback": asdict(step.feedback) if step.feedback else None
+                "system_prompt": step.prompt.system_prompt,  # 完整保存
+                "feedback": asdict(step.feedback) if step.feedback else None,
+                "outputs": detailed_outputs  # 詳細模型輸出
             })
 
         with open(f"{output_dir}/optimization_log_{timestamp}.json", "w", encoding="utf-8") as f:
@@ -884,6 +958,8 @@ def main():
     print("="*60)
     print("Ollama Feedback Descent Optimizer")
     print("="*60)
+    print(f"Dataset: {DATASET_NAME} ({DATASET_CONFIG}/{DATASET_SPLIT})")
+    print(f"Evaluation samples: {N_EVALUATION_SAMPLES}")
 
     # 檢查 Ollama 服務
     if not check_ollama_running():
@@ -909,6 +985,15 @@ def main():
     print(f"[OK] Target model: {TARGET_MODEL}")
     print(f"[OK] Evaluator model: {EVALUATOR_MODEL}")
 
+    # 從數據集加載評估樣本
+    print(f"\n[Loading] Loading {N_EVALUATION_SAMPLES} samples from TxT360-3efforts...")
+    test_queries = load_evaluation_samples(N_EVALUATION_SAMPLES)
+    print(f"[OK] Loaded {len(test_queries)} valid samples")
+
+    if len(test_queries) < 3:
+        print("[ERROR] Not enough valid samples loaded! Need at least 3.")
+        return
+
     # 創建組件
     runner = OllamaRunner(model=TARGET_MODEL)
     evaluator = LocalLLMEvaluator(model=EVALUATOR_MODEL)
@@ -917,7 +1002,7 @@ def main():
     optimizer = FDOptimizer(
         runner=runner,
         evaluator=evaluator,
-        queries=TEST_QUERIES
+        queries=test_queries
     )
 
     # 運行優化

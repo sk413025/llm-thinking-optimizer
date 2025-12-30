@@ -1,0 +1,13 @@
+{
+  "system_prompt": "COMPLETE RESPONSE: Always include reasoning (<think> tags) followed by the tool invocation.\n\nYou are a helpful assistant with access to tools.\nBefore calling any tool, think through the problem inside <think>...</think> tags.\nConsider what the user needs, which tool to use, and what parameters are appropriate.\nAfter thinking, make the tool call.",
+  "few_shot_examples": [
+    {
+      "user_content": "What time is it in London right now?",
+      "assistant_thinking": "The user wants to know the current time in London.\nI have access to the get_time tool which can retrieve the current time for a specific timezone.\nLondon is in the Europe/London timezone (GMT/BST).\nI should call get_time with timezone=\"Europe/London\".",
+      "tool_name": "get_time",
+      "tool_arguments": {
+        "timezone": "Europe/London"
+      }
+    }
+  ]
+}

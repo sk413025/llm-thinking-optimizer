@@ -260,6 +260,8 @@ class OptimizationStep:
     tool_accuracy: float
     score: float
     feedback: Optional[Feedback] = None
+    eval_results: List["EvaluationResult"] = field(default_factory=list)  # 模型輸出記錄
+    queries: List["TestQuery"] = field(default_factory=list)  # 對應的查詢
 
 
 # =============================================================================
@@ -685,7 +687,9 @@ class FDOptimizer:
             prompt=current_prompt,
             thinking_rate=thinking_rate,
             tool_accuracy=tool_accuracy,
-            score=score
+            score=score,
+            eval_results=results,
+            queries=self.queries
         ))
 
         for iteration in range(1, max_iterations + 1):
@@ -725,7 +729,9 @@ class FDOptimizer:
                         preference="A",
                         rationale=f"Tool accuracy {new_tool_accuracy:.0%} below minimum threshold {MIN_TOOL_ACCURACY:.0%}",
                         improvement_suggestions="Need to maintain tool calling ability while adding thinking"
-                    )
+                    ),
+                    eval_results=new_results,
+                    queries=self.queries
                 ))
                 continue
 
@@ -763,7 +769,9 @@ class FDOptimizer:
                 thinking_rate=new_thinking_rate,
                 tool_accuracy=new_tool_accuracy,
                 score=new_score,
-                feedback=feedback
+                feedback=feedback,
+                eval_results=new_results,
+                queries=self.queries
             ))
 
             # Early stopping - 需要同時達到 thinking rate 和 tool accuracy 目標
@@ -819,16 +827,32 @@ After thinking, make the tool call."""
         os.makedirs(output_dir, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        # 保存優化歷史
+        # 保存優化歷史（含詳細模型輸出）
         history_data = []
         for step in self.history:
+            # 構建每個查詢的詳細結果
+            detailed_outputs = []
+            for i, (query, result) in enumerate(zip(step.queries, step.eval_results)):
+                detailed_outputs.append({
+                    "query_index": i,
+                    "user_content": query.user_content[:200] + "..." if len(query.user_content) > 200 else query.user_content,
+                    "expected_tool": query.expected_tool_name,
+                    "model_output": result.output,
+                    "has_thinking": result.has_thinking,
+                    "thinking_content": result.thinking_content,
+                    "has_tool_call": result.has_tool_call,
+                    "tool_call_name": result.tool_call_name,
+                    "tool_call_correct": result.tool_call_name == query.expected_tool_name
+                })
+
             history_data.append({
                 "iteration": step.iteration,
                 "thinking_rate": step.thinking_rate,
                 "tool_accuracy": step.tool_accuracy,
                 "score": step.score,
-                "system_prompt": step.prompt.system_prompt[:500] + "...",
-                "feedback": asdict(step.feedback) if step.feedback else None
+                "system_prompt": step.prompt.system_prompt,  # 完整保存
+                "feedback": asdict(step.feedback) if step.feedback else None,
+                "outputs": detailed_outputs  # 詳細模型輸出
             })
 
         with open(f"{output_dir}/optimization_log_{timestamp}.json", "w", encoding="utf-8") as f:

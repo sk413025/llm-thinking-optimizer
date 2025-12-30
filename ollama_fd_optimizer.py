@@ -27,12 +27,19 @@ TARGET_MODEL = "mistral:7b"        # 被優化的模型
 EVALUATOR_MODEL = "gpt-oss:20b"    # 評估器模型
 OLLAMA_BASE_URL = "http://localhost:11434"
 
+# 數據集配置 (與 train.py 對齊)
+DATASET_NAME = "LLM360/TxT360-3efforts"
+DATASET_CONFIG = "agent"
+DATASET_SPLIT = "medium"
+N_EVALUATION_SAMPLES = 5  # 先用少量樣本測試
+
 # FD 超參數
 MAX_ITERATIONS = 15      # 最大優化輪數
 EARLY_STOP_K = 5         # 連續 K 輪無改進則停止
 SAMPLES_PER_PROMPT = 3   # 每個 prompt 採樣次數
 TEMPERATURE = 0.7        # 生成溫度
 MIN_TOOL_ACCURACY = 0.4  # 最低 tool accuracy 門檻（約束條件）
+TARGET_TOOL_ACCURACY = 0.7  # 目標 tool accuracy（早停條件）
 
 # 標籤
 THINK_TAG_OPEN = "<think>"
@@ -122,6 +129,109 @@ class TestQuery:
     expected_tool_name: str
 
 
+# =============================================================================
+# 數據集加載函數 (與 train.py 對齊)
+# =============================================================================
+
+def normalize_tool_schemas(tools_raw: List[Dict]) -> List[Dict]:
+    """將 TxT360 格式轉換為 OpenAI 格式"""
+    adapted_tools = []
+    for t in tools_raw:
+        if not isinstance(t, dict):
+            continue
+        if "function" in t and isinstance(t["function"], dict):
+            adapted_tools.append(t)
+            continue
+        name = t.get("name", "")
+        description = t.get("description", "")
+        parameters = t.get("parameters") or {"type": "object", "properties": {}}
+        adapted_tools.append({
+            "type": t.get("type", "function"),
+            "function": {"name": name, "description": description, "parameters": parameters},
+        })
+    return adapted_tools
+
+
+def extract_test_query(sample: Dict) -> Optional[TestQuery]:
+    """從 TxT360 樣本提取 TestQuery"""
+    try:
+        msgs = json.loads(sample["messages"])
+    except (json.JSONDecodeError, KeyError, TypeError):
+        return None
+
+    if not msgs or not isinstance(msgs, list):
+        return None
+
+    # 提取工具
+    tools_raw = msgs[0].get("tools", []) if isinstance(msgs[0], dict) else []
+    if not tools_raw:
+        return None
+
+    adapted_tools = normalize_tool_schemas(tools_raw)
+    if not adapted_tools:
+        return None
+
+    # 找第一個 user 消息
+    user_content = None
+    for msg in msgs:
+        if msg.get("role") == "user":
+            user_content = msg.get("content", "")
+            break
+    if not user_content:
+        return None
+
+    # 找 assistant 消息中的 thinking 和 tool_call
+    expected_tool_name = None
+    has_thinking = False
+    THINK_KEYS = ["think", "think_fast", "think_faster"]
+
+    for msg in msgs:
+        if msg.get("role") != "assistant":
+            continue
+        if any(msg.get(k) for k in THINK_KEYS):
+            has_thinking = True
+        tool_calls = msg.get("tool_calls", [])
+        if tool_calls:
+            first_tc = tool_calls[0]
+            if isinstance(first_tc, dict):
+                expected_tool_name = first_tc.get("name")
+                if not expected_tool_name and "function" in first_tc:
+                    expected_tool_name = first_tc["function"].get("name")
+            break
+
+    if not has_thinking or not expected_tool_name:
+        return None
+
+    return TestQuery(user_content=user_content, tools=adapted_tools, expected_tool_name=expected_tool_name)
+
+
+def load_evaluation_samples(n_samples: int = N_EVALUATION_SAMPLES) -> List[TestQuery]:
+    """從 TxT360-3efforts 加載評估樣本"""
+    from datasets import load_dataset
+
+    print(f"  Loading from {DATASET_NAME} ({DATASET_CONFIG}/{DATASET_SPLIT})...")
+    dataset = load_dataset(DATASET_NAME, name=DATASET_CONFIG, split=DATASET_SPLIT, streaming=True)
+
+    test_queries = []
+    processed = 0
+    max_attempts = n_samples * 5
+
+    for sample in dataset:
+        if len(test_queries) >= n_samples:
+            break
+        query = extract_test_query(sample)
+        if query is not None:
+            test_queries.append(query)
+        processed += 1
+        if processed >= max_attempts:
+            print(f"  Warning: Reached max attempts ({max_attempts}), got {len(test_queries)} samples")
+            break
+        if processed % 100 == 0:
+            print(f"  Processed {processed} samples, found {len(test_queries)} valid...")
+
+    return test_queries
+
+
 @dataclass
 class EvaluationResult:
     """模型輸出評估結果"""
@@ -150,109 +260,6 @@ class OptimizationStep:
     tool_accuracy: float
     score: float
     feedback: Optional[Feedback] = None
-
-
-# =============================================================================
-# 測試查詢集
-# =============================================================================
-
-TEST_QUERIES = [
-    TestQuery(
-        user_content="What's the current weather in Tokyo?",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "get_weather",
-                "description": "Get the current weather for a location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "city": {"type": "string", "description": "The city name"},
-                        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]}
-                    },
-                    "required": ["city"]
-                }
-            }
-        }],
-        expected_tool_name="get_weather"
-    ),
-    TestQuery(
-        user_content="Search for recent news about AI regulations in Europe",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "search_news",
-                "description": "Search for news articles on a topic",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {"type": "string", "description": "Search query"},
-                        "region": {"type": "string", "description": "Geographic region"}
-                    },
-                    "required": ["query"]
-                }
-            }
-        }],
-        expected_tool_name="search_news"
-    ),
-    TestQuery(
-        user_content="Calculate 15% tip on a $85.50 restaurant bill",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "calculate",
-                "description": "Perform mathematical calculations",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "expression": {"type": "string", "description": "Math expression"}
-                    },
-                    "required": ["expression"]
-                }
-            }
-        }],
-        expected_tool_name="calculate"
-    ),
-    TestQuery(
-        user_content="Find restaurants near Times Square that are open now",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "search_places",
-                "description": "Search for places near a location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {"type": "string", "description": "What to search for"},
-                        "location": {"type": "string", "description": "Location"},
-                        "open_now": {"type": "boolean", "description": "Only open places"}
-                    },
-                    "required": ["query", "location"]
-                }
-            }
-        }],
-        expected_tool_name="search_places"
-    ),
-    TestQuery(
-        user_content="Translate 'Hello, how are you?' to Japanese",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "translate",
-                "description": "Translate text between languages",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "text": {"type": "string", "description": "Text to translate"},
-                        "target_language": {"type": "string", "description": "Target language"}
-                    },
-                    "required": ["text", "target_language"]
-                }
-            }
-        }],
-        expected_tool_name="translate"
-    ),
-]
 
 
 # =============================================================================
@@ -759,9 +766,9 @@ class FDOptimizer:
                 feedback=feedback
             ))
 
-            # Early stopping
-            if thinking_rate >= 0.95:
-                print(f"\n[Early Stop] Target thinking rate achieved!")
+            # Early stopping - 需要同時達到 thinking rate 和 tool accuracy 目標
+            if thinking_rate >= 0.95 and tool_accuracy >= TARGET_TOOL_ACCURACY:
+                print(f"\n[Early Stop] Targets achieved! (thinking={thinking_rate:.0%}, tool_acc={tool_accuracy:.0%})")
                 break
 
             if self.no_improvement_count >= EARLY_STOP_K:
@@ -884,6 +891,8 @@ def main():
     print("="*60)
     print("Ollama Feedback Descent Optimizer")
     print("="*60)
+    print(f"Dataset: {DATASET_NAME} ({DATASET_CONFIG}/{DATASET_SPLIT})")
+    print(f"Evaluation samples: {N_EVALUATION_SAMPLES}")
 
     # 檢查 Ollama 服務
     if not check_ollama_running():
@@ -909,6 +918,15 @@ def main():
     print(f"[OK] Target model: {TARGET_MODEL}")
     print(f"[OK] Evaluator model: {EVALUATOR_MODEL}")
 
+    # 從數據集加載評估樣本
+    print(f"\n[Loading] Loading {N_EVALUATION_SAMPLES} samples from TxT360-3efforts...")
+    test_queries = load_evaluation_samples(N_EVALUATION_SAMPLES)
+    print(f"[OK] Loaded {len(test_queries)} valid samples")
+
+    if len(test_queries) < 3:
+        print("[ERROR] Not enough valid samples loaded! Need at least 3.")
+        return
+
     # 創建組件
     runner = OllamaRunner(model=TARGET_MODEL)
     evaluator = LocalLLMEvaluator(model=EVALUATOR_MODEL)
@@ -917,7 +935,7 @@ def main():
     optimizer = FDOptimizer(
         runner=runner,
         evaluator=evaluator,
-        queries=TEST_QUERIES
+        queries=test_queries
     )
 
     # 運行優化

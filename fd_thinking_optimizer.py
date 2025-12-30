@@ -29,6 +29,12 @@ MAX_ITERATIONS = 15
 EARLY_STOP_K = 5
 MAX_NEW_TOKENS = 512
 
+# Dataset settings (aligned with train.py)
+DATASET_NAME = "LLM360/TxT360-3efforts"
+DATASET_CONFIG = "agent"
+DATASET_SPLIT = "medium"
+N_EVALUATION_SAMPLES = 100
+
 # OpenAI API settings (for GPT-4o evaluator)
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
@@ -111,6 +117,174 @@ class TestQuery:
     expected_tool_name: str  # The expected tool to be called
 
 
+# =============================================================================
+# Dataset Loading Functions (aligned with train.py)
+# =============================================================================
+
+def normalize_tool_schemas(tools_raw: List[Dict]) -> List[Dict]:
+    """
+    Normalize tool schemas from TxT360 format to OpenAI format.
+
+    Input format (TxT360 simple format):
+        {"name": "...", "description": "...", "parameters": {...}}
+
+    Output format (OpenAI format):
+        {"type": "function", "function": {"name": "...", "description": "...", "parameters": {...}}}
+    """
+    adapted_tools = []
+
+    for t in tools_raw:
+        if not isinstance(t, dict):
+            continue
+
+        # Already in OpenAI format?
+        if "function" in t and isinstance(t["function"], dict):
+            adapted_tools.append(t)
+            continue
+
+        # Convert from simple format
+        name = t.get("name", "")
+        description = t.get("description", "")
+        parameters = t.get("parameters") or {"type": "object", "properties": {}}
+
+        adapted_tools.append({
+            "type": t.get("type", "function"),
+            "function": {
+                "name": name,
+                "description": description,
+                "parameters": parameters,
+            },
+        })
+
+    return adapted_tools
+
+
+def extract_test_query(sample: Dict) -> Optional[TestQuery]:
+    """
+    Extract a TestQuery from a TxT360 dataset sample.
+
+    Extraction logic:
+    1. Parse messages JSON
+    2. Extract tools from first message
+    3. Find first user message content
+    4. Find first assistant message with tool_call
+    5. Extract expected_tool_name from tool_call
+
+    Returns None if sample is invalid or missing required fields.
+    """
+    try:
+        msgs = json.loads(sample["messages"])
+    except (json.JSONDecodeError, KeyError, TypeError):
+        return None
+
+    if not msgs or not isinstance(msgs, list):
+        return None
+
+    # 1. Extract tools from first message
+    tools_raw = []
+    if isinstance(msgs[0], dict):
+        tools_raw = msgs[0].get("tools", [])
+
+    if not tools_raw:
+        return None
+
+    # 2. Normalize tools to OpenAI format
+    adapted_tools = normalize_tool_schemas(tools_raw)
+
+    if not adapted_tools:
+        return None
+
+    # 3. Find first user message
+    user_content = None
+    for msg in msgs:
+        if msg.get("role") == "user":
+            user_content = msg.get("content", "")
+            break
+
+    if not user_content:
+        return None
+
+    # 4. Find first assistant message with thinking AND tool_calls
+    expected_tool_name = None
+    has_thinking = False
+    THINK_KEYS = ["think", "think_fast", "think_faster"]
+
+    for msg in msgs:
+        if msg.get("role") != "assistant":
+            continue
+
+        # Check for thinking
+        if any(msg.get(k) for k in THINK_KEYS):
+            has_thinking = True
+
+        # Extract tool_call name
+        tool_calls = msg.get("tool_calls", [])
+        if tool_calls and len(tool_calls) > 0:
+            first_tc = tool_calls[0]
+            if isinstance(first_tc, dict):
+                # Format: {"name": "...", "arguments": "..."}
+                expected_tool_name = first_tc.get("name")
+                # Also check nested function format
+                if not expected_tool_name and "function" in first_tc:
+                    expected_tool_name = first_tc["function"].get("name")
+            break
+
+    # Filter: require both thinking and tool_call
+    if not has_thinking or not expected_tool_name:
+        return None
+
+    return TestQuery(
+        user_content=user_content,
+        tools=adapted_tools,
+        expected_tool_name=expected_tool_name
+    )
+
+
+def load_evaluation_samples(n_samples: int = N_EVALUATION_SAMPLES) -> List[TestQuery]:
+    """
+    Load evaluation samples from TxT360-3efforts dataset.
+
+    Args:
+        n_samples: Number of valid samples to load
+
+    Returns:
+        List of TestQuery objects extracted from the dataset
+    """
+    from datasets import load_dataset
+
+    print(f"  Loading from {DATASET_NAME} ({DATASET_CONFIG}/{DATASET_SPLIT})...")
+
+    dataset = load_dataset(
+        DATASET_NAME,
+        name=DATASET_CONFIG,
+        split=DATASET_SPLIT,
+        streaming=True
+    )
+
+    test_queries = []
+    processed = 0
+    max_attempts = n_samples * 5  # Allow for filtering
+
+    for sample in dataset:
+        if len(test_queries) >= n_samples:
+            break
+
+        query = extract_test_query(sample)
+        if query is not None:
+            test_queries.append(query)
+
+        processed += 1
+        if processed >= max_attempts:
+            print(f"  Warning: Reached max attempts ({max_attempts}), got {len(test_queries)} samples")
+            break
+
+        # Progress indicator
+        if processed % 100 == 0:
+            print(f"  Processed {processed} samples, found {len(test_queries)} valid...")
+
+    return test_queries
+
+
 @dataclass
 class Feedback:
     """Feedback from pairwise comparison."""
@@ -127,109 +301,7 @@ class EvaluationResult:
     thinking_content: Optional[str]
     has_tool_call: bool
     tool_call_name: Optional[str]
-
-
-# =============================================================================
-# Test Queries (5 diverse queries for validation)
-# =============================================================================
-
-TEST_QUERIES = [
-    TestQuery(
-        user_content="What's the current weather in Tokyo?",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "get_weather",
-                "description": "Get the current weather for a location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "city": {"type": "string", "description": "The city name"},
-                        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]}
-                    },
-                    "required": ["city"]
-                }
-            }
-        }],
-        expected_tool_name="get_weather"
-    ),
-    TestQuery(
-        user_content="Search for recent news about AI regulations in Europe",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "search_news",
-                "description": "Search for news articles on a topic",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {"type": "string", "description": "Search query"},
-                        "region": {"type": "string", "description": "Geographic region"}
-                    },
-                    "required": ["query"]
-                }
-            }
-        }],
-        expected_tool_name="search_news"
-    ),
-    TestQuery(
-        user_content="Calculate 15% tip on a $85.50 restaurant bill",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "calculate",
-                "description": "Perform mathematical calculations",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "expression": {"type": "string", "description": "Math expression to evaluate"}
-                    },
-                    "required": ["expression"]
-                }
-            }
-        }],
-        expected_tool_name="calculate"
-    ),
-    TestQuery(
-        user_content="Find restaurants near Times Square that are open now",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "search_places",
-                "description": "Search for places near a location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {"type": "string", "description": "What to search for"},
-                        "location": {"type": "string", "description": "Location to search near"},
-                        "open_now": {"type": "boolean", "description": "Only show open places"}
-                    },
-                    "required": ["query", "location"]
-                }
-            }
-        }],
-        expected_tool_name="search_places"
-    ),
-    TestQuery(
-        user_content="Translate 'Hello, how are you?' to Japanese",
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "translate",
-                "description": "Translate text between languages",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "text": {"type": "string", "description": "Text to translate"},
-                        "target_language": {"type": "string", "description": "Target language code"}
-                    },
-                    "required": ["text", "target_language"]
-                }
-            }
-        }],
-        expected_tool_name="translate"
-    ),
-]
+    tool_call_correct: bool = False  # Whether the tool call matches expected
 
 
 # =============================================================================
@@ -545,17 +617,21 @@ class FeedbackDescentOptimizer:
 
     def compute_metrics(self, results: List[EvaluationResult]) -> Dict:
         """Compute evaluation metrics from results."""
-        thinking_rate = sum(1 for r in results if r.has_thinking) / len(results)
-        tool_call_rate = sum(1 for r in results if r.has_tool_call) / len(results)
-        correct_tool_rate = sum(
+        n = len(results)
+        if n == 0:
+            return {"thinking_rate": 0, "tool_call_rate": 0, "tool_accuracy": 0}
+
+        thinking_rate = sum(1 for r in results if r.has_thinking) / n
+        tool_call_rate = sum(1 for r in results if r.has_tool_call) / n
+        tool_accuracy = sum(
             1 for r, q in zip(results, self.queries)
             if r.tool_call_name == q.expected_tool_name
-        ) / len(results)
+        ) / n
 
         return {
             "thinking_rate": thinking_rate,
             "tool_call_rate": tool_call_rate,
-            "correct_tool_rate": correct_tool_rate,
+            "tool_accuracy": tool_accuracy,
         }
 
     def optimize(self, initial_prompt: ThinkingPrompt) -> ThinkingPrompt:
@@ -577,7 +653,7 @@ class FeedbackDescentOptimizer:
         self._log_iteration(0, best_prompt, best_outputs, best_metrics, None)
         print(f"  Thinking rate: {best_metrics['thinking_rate']:.0%}")
         print(f"  Tool call rate: {best_metrics['tool_call_rate']:.0%}")
-        print(f"  Correct tool rate: {best_metrics['correct_tool_rate']:.0%}")
+        print(f"  Tool accuracy: {best_metrics['tool_accuracy']:.0%}")
 
         for iteration in range(1, self.max_iterations + 1):
             print(f"\n[Iteration {iteration}/{self.max_iterations}]")
@@ -631,7 +707,7 @@ class FeedbackDescentOptimizer:
         print("="*60)
         print(f"Final thinking rate: {best_metrics['thinking_rate']:.0%}")
         print(f"Final tool call rate: {best_metrics['tool_call_rate']:.0%}")
-        print(f"Final correct tool rate: {best_metrics['correct_tool_rate']:.0%}")
+        print(f"Final tool accuracy: {best_metrics['tool_accuracy']:.0%}")
         print(f"\nOptimized prompt saved to: {self.log_file}")
 
         return best_prompt
@@ -678,9 +754,10 @@ def main():
     print("="*60)
     print("Feedback Descent for FunctionGemma Thinking Capability")
     print("="*60)
+    print(f"Dataset: {DATASET_NAME} ({DATASET_CONFIG}/{DATASET_SPLIT})")
+    print(f"Evaluation samples: {N_EVALUATION_SAMPLES}")
     print(f"Max iterations: {MAX_ITERATIONS}")
     print(f"Early stop after: {EARLY_STOP_K} iterations without improvement")
-    print(f"Test queries: {len(TEST_QUERIES)}")
 
     # Check API key
     if not OPENAI_API_KEY:
@@ -688,18 +765,27 @@ def main():
         print("Please set it with: export OPENAI_API_KEY='your-key-here'")
         return
 
+    # Load evaluation samples from dataset
+    print("\n[1/4] Loading evaluation samples from TxT360-3efforts...")
+    test_queries = load_evaluation_samples(N_EVALUATION_SAMPLES)
+    print(f"  Loaded {len(test_queries)} valid samples")
+
+    if len(test_queries) < 10:
+        print("Error: Not enough valid samples loaded! Need at least 10.")
+        return
+
     # Initialize components
-    print("\n[1/3] Loading FunctionGemma model...")
+    print("\n[2/4] Loading FunctionGemma model...")
     model_runner = FunctionGemmaRunner()
 
-    print("\n[2/3] Initializing GPT-4o evaluator...")
+    print("\n[3/4] Initializing GPT-4o evaluator...")
     evaluator = GPT4oEvaluator(OPENAI_API_KEY)
 
-    print("\n[3/3] Setting up optimizer...")
+    print("\n[4/4] Setting up optimizer...")
     optimizer = FeedbackDescentOptimizer(
         model_runner=model_runner,
         evaluator=evaluator,
-        test_queries=TEST_QUERIES,
+        test_queries=test_queries,
     )
 
     # Run optimization

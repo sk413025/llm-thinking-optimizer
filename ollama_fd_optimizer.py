@@ -260,8 +260,9 @@ class OptimizationStep:
     tool_accuracy: float
     score: float
     feedback: Optional[Feedback] = None
-    eval_results: List["EvaluationResult"] = field(default_factory=list)  # 模型輸出記錄
-    queries: List["TestQuery"] = field(default_factory=list)  # 對應的查詢
+    # 按 query 分組的結果: results_by_query[i] = query i 的所有採樣結果
+    results_by_query: List[List["EvaluationResult"]] = field(default_factory=list)
+    queries: List["TestQuery"] = field(default_factory=list)
 
 
 # =============================================================================
@@ -442,8 +443,8 @@ class LocalLLMEvaluator:
 
     def compare(
         self,
-        outputs_a: List[EvaluationResult],
-        outputs_b: List[EvaluationResult],
+        outputs_a: List[List[EvaluationResult]],  # 按 query 分組
+        outputs_b: List[List[EvaluationResult]],  # 按 query 分組
         queries: List[TestQuery]
     ) -> Tuple[str, Feedback]:
         """比較兩組輸出並返回偏好和反饋"""
@@ -514,41 +515,58 @@ You MUST respond in this exact JSON format:
 
     def _build_comparison_prompt(
         self,
-        outputs_a: List[EvaluationResult],
-        outputs_b: List[EvaluationResult],
+        outputs_a: List[List[EvaluationResult]],  # 按 query 分組
+        outputs_b: List[List[EvaluationResult]],  # 按 query 分組
         queries: List[TestQuery]
     ) -> str:
-        """構建比較 prompt"""
+        """構建比較 prompt（正確對齊：每組結果對應一個 query）"""
         lines = ["Compare the following two sets of outputs:\n"]
 
-        for i, (query, out_a, out_b) in enumerate(zip(queries, outputs_a, outputs_b)):
-            lines.append(f"=== Query {i+1}: {query.user_content} ===")
+        # 展平以計算總體統計
+        flat_a = [r for group in outputs_a for r in group]
+        flat_b = [r for group in outputs_b for r in group]
+
+        for i, (query, group_a, group_b) in enumerate(zip(queries, outputs_a, outputs_b)):
+            lines.append(f"=== Query {i+1}: {query.user_content[:100]}... ===")
             lines.append(f"Expected tool: {query.expected_tool_name}")
 
-            lines.append(f"\n--- Output A ---")
-            lines.append(f"Has thinking: {out_a.has_thinking}")
-            if out_a.thinking_content:
-                lines.append(f"Thinking: {out_a.thinking_content[:200]}...")
-            lines.append(f"Has tool call: {out_a.has_tool_call}")
-            lines.append(f"Tool called: {out_a.tool_call_name}")
-            lines.append(f"Correct tool: {out_a.tool_call_correct}")
+            # 使用每組的第一個採樣來展示（所有採樣都是對同一個 query 的回應）
+            out_a = group_a[0] if group_a else None
+            out_b = group_b[0] if group_b else None
 
-            lines.append(f"\n--- Output B ---")
-            lines.append(f"Has thinking: {out_b.has_thinking}")
-            if out_b.thinking_content:
-                lines.append(f"Thinking: {out_b.thinking_content[:200]}...")
-            lines.append(f"Has tool call: {out_b.has_tool_call}")
-            lines.append(f"Tool called: {out_b.tool_call_name}")
-            lines.append(f"Correct tool: {out_b.tool_call_correct}")
+            if out_a:
+                lines.append(f"\n--- Output A (sample 1 of {len(group_a)}) ---")
+                lines.append(f"Has thinking: {out_a.has_thinking}")
+                if out_a.thinking_content:
+                    lines.append(f"Thinking: {out_a.thinking_content[:200]}...")
+                lines.append(f"Has tool call: {out_a.has_tool_call}")
+                lines.append(f"Tool called: {out_a.tool_call_name}")
+                lines.append(f"Correct tool: {out_a.tool_call_correct}")
+                # 該 query 的統計
+                a_query_correct = sum(1 for r in group_a if r.tool_call_correct) / len(group_a)
+                lines.append(f"Query accuracy ({len(group_a)} samples): {a_query_correct:.0%}")
+
+            if out_b:
+                lines.append(f"\n--- Output B (sample 1 of {len(group_b)}) ---")
+                lines.append(f"Has thinking: {out_b.has_thinking}")
+                if out_b.thinking_content:
+                    lines.append(f"Thinking: {out_b.thinking_content[:200]}...")
+                lines.append(f"Has tool call: {out_b.has_tool_call}")
+                lines.append(f"Tool called: {out_b.tool_call_name}")
+                lines.append(f"Correct tool: {out_b.tool_call_correct}")
+                # 該 query 的統計
+                b_query_correct = sum(1 for r in group_b if r.tool_call_correct) / len(group_b)
+                lines.append(f"Query accuracy ({len(group_b)} samples): {b_query_correct:.0%}")
+
             lines.append("")
 
-        # 添加統計摘要
-        a_thinking_rate = sum(1 for o in outputs_a if o.has_thinking) / len(outputs_a)
-        b_thinking_rate = sum(1 for o in outputs_b if o.has_thinking) / len(outputs_b)
-        a_tool_rate = sum(1 for o in outputs_a if o.tool_call_correct) / len(outputs_a)
-        b_tool_rate = sum(1 for o in outputs_b if o.tool_call_correct) / len(outputs_b)
+        # 添加總體統計摘要
+        a_thinking_rate = sum(1 for o in flat_a if o.has_thinking) / len(flat_a) if flat_a else 0
+        b_thinking_rate = sum(1 for o in flat_b if o.has_thinking) / len(flat_b) if flat_b else 0
+        a_tool_rate = sum(1 for o in flat_a if o.tool_call_correct) / len(flat_a) if flat_a else 0
+        b_tool_rate = sum(1 for o in flat_b if o.tool_call_correct) / len(flat_b) if flat_b else 0
 
-        lines.append(f"\n=== Summary ===")
+        lines.append(f"\n=== Overall Summary ===")
         lines.append(f"Set A: thinking={a_thinking_rate:.0%}, tool_accuracy={a_tool_rate:.0%}")
         lines.append(f"Set B: thinking={b_thinking_rate:.0%}, tool_accuracy={b_tool_rate:.0%}")
 
@@ -632,19 +650,29 @@ class FDOptimizer:
         self.best_score: float = 0.0
         self.no_improvement_count: int = 0
 
-    def evaluate_prompt(self, prompt: ThinkingPrompt) -> Tuple[List[EvaluationResult], float, float]:
-        """評估一個 prompt 的效果"""
-        all_results = []
+    def evaluate_prompt(self, prompt: ThinkingPrompt) -> Tuple[List[List[EvaluationResult]], float, float]:
+        """評估一個 prompt 的效果
+
+        Returns:
+            results_by_query: 按 query 分組的結果，results_by_query[i] 是 query i 的所有採樣
+            thinking_rate: 總體 thinking 率
+            tool_accuracy: 總體工具準確率
+        """
+        results_by_query = []  # List[List[EvaluationResult]] - 按 query 分組
+        all_results = []  # 用於計算總體指標
 
         for query in self.queries:
+            query_results = []
             for _ in range(SAMPLES_PER_PROMPT):
                 result = self.runner.generate(prompt, query)
+                query_results.append(result)
                 all_results.append(result)
+            results_by_query.append(query_results)
 
         thinking_rate = sum(1 for r in all_results if r.has_thinking) / len(all_results)
         tool_accuracy = sum(1 for r in all_results if r.tool_call_correct) / len(all_results)
 
-        return all_results, thinking_rate, tool_accuracy
+        return results_by_query, thinking_rate, tool_accuracy
 
     def calculate_score(self, thinking_rate: float, tool_accuracy: float) -> float:
         """計算綜合分數"""
@@ -688,7 +716,7 @@ class FDOptimizer:
             thinking_rate=thinking_rate,
             tool_accuracy=tool_accuracy,
             score=score,
-            eval_results=results,
+            results_by_query=results,
             queries=self.queries
         ))
 
@@ -730,7 +758,7 @@ class FDOptimizer:
                         rationale=f"Tool accuracy {new_tool_accuracy:.0%} below minimum threshold {MIN_TOOL_ACCURACY:.0%}",
                         improvement_suggestions="Need to maintain tool calling ability while adding thinking"
                     ),
-                    eval_results=new_results,
+                    results_by_query=new_results,
                     queries=self.queries
                 ))
                 continue
@@ -770,7 +798,7 @@ class FDOptimizer:
                 tool_accuracy=new_tool_accuracy,
                 score=new_score,
                 feedback=feedback,
-                eval_results=new_results,
+                results_by_query=new_results,
                 queries=self.queries
             ))
 
@@ -830,19 +858,34 @@ After thinking, make the tool call."""
         # 保存優化歷史（含詳細模型輸出）
         history_data = []
         for step in self.history:
-            # 構建每個查詢的詳細結果
+            # 構建每個查詢的詳細結果（正確對齊：results_by_query[i] = query i 的所有採樣）
             detailed_outputs = []
-            for i, (query, result) in enumerate(zip(step.queries, step.eval_results)):
+            for i, (query, query_results) in enumerate(zip(step.queries, step.results_by_query)):
+                # 取每個 query 的所有採樣結果
+                samples = []
+                for sample_idx, result in enumerate(query_results):
+                    samples.append({
+                        "sample_index": sample_idx,
+                        "model_output": result.output,
+                        "has_thinking": result.has_thinking,
+                        "thinking_content": result.thinking_content,
+                        "has_tool_call": result.has_tool_call,
+                        "tool_call_name": result.tool_call_name,
+                        "tool_call_correct": result.tool_call_correct
+                    })
+
+                # 計算該 query 的統計
+                query_thinking_rate = sum(1 for r in query_results if r.has_thinking) / len(query_results)
+                query_tool_accuracy = sum(1 for r in query_results if r.tool_call_correct) / len(query_results)
+
                 detailed_outputs.append({
                     "query_index": i,
                     "user_content": query.user_content[:200] + "..." if len(query.user_content) > 200 else query.user_content,
                     "expected_tool": query.expected_tool_name,
-                    "model_output": result.output,
-                    "has_thinking": result.has_thinking,
-                    "thinking_content": result.thinking_content,
-                    "has_tool_call": result.has_tool_call,
-                    "tool_call_name": result.tool_call_name,
-                    "tool_call_correct": result.tool_call_name == query.expected_tool_name
+                    "num_samples": len(query_results),
+                    "query_thinking_rate": query_thinking_rate,
+                    "query_tool_accuracy": query_tool_accuracy,
+                    "samples": samples
                 })
 
             history_data.append({
